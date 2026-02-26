@@ -1,0 +1,63 @@
+﻿@model QL_KhachSan.Models.BienThePhong
+@{
+    ViewBag.Title = "Sửa biến thể phòng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3 class="mb-3">✏️ Sửa biến thể phòng</h3>
+
+@using (Html.BeginForm("Edit", "BienThePhong", FormMethod.Post,
+        new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.MaBienThe)
+
+    <div class="mb-3">
+        @Html.LabelFor(m => m.BienThe)
+        @Html.TextBoxFor(m => m.BienThe, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.BienThe, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="mb-3">
+        @Html.LabelFor(m => m.GiaBan)
+        @Html.TextBoxFor(m => m.GiaBan, new { @class = "form-control", type = "number" })
+        @Html.ValidationMessageFor(m => m.GiaBan, "", new { @class = "text-danger" })
+    </div>
+
+    <hr />
+    <h5>📸 Ảnh hiện tại</h5>
+
+    <div class="row">
+        @if (Model.HinhAnhs != null && Model.HinhAnhs.Any())
+        {
+            foreach (var img in Model.HinhAnhs.OrderBy(x => x.Stt))
+            {
+                <div class="col-md-3 text-center mb-3">
+                    <img src="~/Content/images/@img.HinhAnh1"
+                         class="img-fluid rounded shadow"
+                         style="height:150px; object-fit:cover" />
+
+                    <a href="@Url.Action("DeleteImage",
+                        new { maBienThe = img.MaBienThe, stt = img.Stt })"
+                       class="btn btn-sm btn-danger mt-2"
+                       onclick="return confirm('Xóa ảnh này?')">
+                        🗑 Xóa
+                    </a>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-muted">Chưa có ảnh</p>
+        }
+    </div>
+
+    <hr />
+    <div class="mb-3">
+        <label>Thêm ảnh mới</label>
+        <input type="file" name="files" multiple class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-warning">💾 Cập nhật</button>
+    @Html.ActionLink("⬅ Quay lại", "Index", null, new { @class = "btn btn-secondary ms-2" })
+}

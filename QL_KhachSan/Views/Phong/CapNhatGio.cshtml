@@ -1,0 +1,37 @@
+﻿@model QL_KhachSan.Models.CartItem
+@{
+    ViewBag.Title = "CapNhatNgay";
+    string ngayDenValue = Model.NgayBD.ToString("yyyy-MM-dd");
+    string ngayDiValue = Model.NgayKT.ToString("yyyy-MM-dd");
+}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Chỉnh sửa ngày</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        @using (Html.BeginForm("CapNhatGio", "Phong", FormMethod.Post))
+        {
+            <div class="modal-body">
+                <input type="hidden" name="MaBT" value="@Model.MaBienThe" />
+                <div class="mb-2">
+                    <label class="form-label small fw-bold">Ngày đến</label>
+                    <input type="date" name="ngayDen" class="form-control" value="@ngayDenValue" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Ngày đi</label>
+                    <input type="date" name="ngayDi" class="form-control" value="@ngayDiValue" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Nhập số lượng phòng:</label>
+                    <input type="number" name="sld" class="form-control" value="@Model.SLPhong" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Lưu</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        }
+    </div>
+</div>

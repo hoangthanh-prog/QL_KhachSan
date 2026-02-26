@@ -1,0 +1,308 @@
+﻿@using System.Collections.Generic
+@using QL_KhachSan.Models
+@model BienThePhong
+
+@{
+    ViewBag.Title = "Chi tiết phòng";
+    var lienQuan = ViewBag.LienQuan as List<QL_KhachSan.Models.BienThePhong>;
+    var tong = Model.Phongs.Count();
+    var trong = Model.Phongs.Count(p => p.TinhTrang.Trim() == "Trống");
+
+    DateTime? ngayDen = ViewBag.NgayDen as DateTime?;
+    DateTime? ngayDi = ViewBag.NgayDi as DateTime?;
+
+    List<string> galleryImages = new List<string>();
+    if (Model.HinhAnhs != null && Model.HinhAnhs.Count > 0)
+    {
+        foreach (var img in Model.HinhAnhs)
+        {
+            if (!string.IsNullOrEmpty(img.HinhAnh1))
+            {
+                galleryImages.Add(Url.Content("~/Content/Images/" + img.HinhAnh1.Trim()));
+            }
+        }
+    }
+    if (galleryImages.Count == 0)
+    {
+        galleryImages.Add("https://via.placeholder.com/800x500?text=HUIT+Hotel");
+    }
+    string mainImage = galleryImages.First();
+}
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-danger">@TempData["Message"]</div>
+}
+
+<div class="row">
+    <div class="card shadow-sm border-0 mb-3">
+        <div class="card-body">
+            <h5 class="card-title mb-3">Hình ảnh phòng @Model.BienThe</h5>
+
+            <div class="main-image-container mb-3 text-center">
+                <img id="mainImageDisplay" src="@mainImage"
+                     alt="@Model.LoaiPhong.TenLoai"
+                     class="img-fluid rounded shadow-sm"
+                     style="width: 100%; max-height: 700px; object-fit: cover;" />
+            </div>
+
+            @if (galleryImages.Count > 1)
+            {
+                <div class="d-flex overflow-auto gap-2 pb-2">
+                    <div class="mx-auto">
+                        @foreach (var imgUrl in galleryImages)
+                        {
+                            <img src="@imgUrl"
+                                 onclick="changeMainImage(this.src)"
+                                 class="img-thumbnail cursor-pointer border-0 shadow-sm"
+                                 style="width: 100px; height: 70px; object-fit: cover; cursor: pointer; transition: transform 0.2s;"
+                                 onmouseover="this.style.transform='scale(1.05)'"
+                                 onmouseout="this.style.transform='scale(1)'"
+                                 alt="Ảnh phụ" />
+                        }
+                    </div>
+                </div>
+                <p class="text-muted small mt-2 fst-italic text-center">
+                    (Nhấn vào ảnh nhỏ để xem kích thước lớn)
+                </p>
+            }
+        </div>
+    </div>
+
+    <div class="col-lg-8 mb-4">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <h3 class="card-title mb-1">@Model.BienThe</h3>
+                <p class="text-muted mb-2">
+                    <i class="bi bi-geo-alt"></i> HUIT Hotel • TP.HCM
+                </p>
+                <span class="badge bg-info text-dark mb-2">
+                    Hạng phòng: @Model.LoaiPhong.TenLoai
+                </span>
+                <h4 class="text-danger fw-bold mb-2">
+                    @String.Format("{0:N0} VNĐ / đêm", Model.GiaBan)
+                </h4>
+                <p class="mb-3">
+                    @Model.MoTa
+                </p>
+                <p class="small text-muted mb-1">
+                    Tổng số phòng: <strong>@tong</strong> •
+                    Còn trống: <strong>@trong</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow-sm border-0 mb-3 border-top border-4 border-info">
+            <div class="card-body">
+                <h5 class="card-title mb-3 fw-bold text-uppercase text-primary">Đặt phòng ngay</h5>
+
+                <input type="hidden" id="giaPhong" value="@Model.GiaBan" />
+
+                <div class="mb-2">
+                    <label class="form-label small fw-bold">Ngày đến</label>
+                    <input type="date" id="ngayDen" name="ngayDen" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Ngày đi</label>
+                    <input type="date" id="ngayDi" name="ngayDi" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Nhập số lượng phòng:</label>
+                    <input type="number" id="sld" name="sld" class="form-control" placeholder="Nhập số lượng phòng..." required />
+                </div>
+
+                <div class="d-grid">
+                    @using (Html.BeginForm("ThemVaoGio", "Phong", FormMethod.Post, new { id = "gioForm" }))
+                    {
+                        @Html.Hidden("maBienThe", Model.MaBienThe)
+                        <input type="hidden" name="ngayDen" id="ngayDenGH" required />
+                        <input type="hidden" name="ngayDi" id="ngayDiGH" required />
+                        <input type="hidden" name="sld" id="sldGH" required />
+                        <button type="submit" class="btn text-white py-2 fw-bold bg-success mb-2 w-100">
+                            THÊM VÀO GIỎ HÀNG
+                        </button>
+                    }
+                    <button class="btn text-white py-2 fw-bold" data-bs-toggle="modal" data-bs-target="#XacNhan" style="background:#00AEEF;">
+                        ĐẶT PHÒNG
+                    </button>
+                </div>
+                <div class="modal fade" id="XacNhan" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            @using (Html.BeginForm("ThanhToan", "Phong", FormMethod.Post, new { id = "datPhongForm" }))
+                            {
+                                <div class="modal-header" style="display: block">
+                                    @Html.Hidden("maBienThe", Model.MaBienThe)
+                                    <input type="hidden" name="ngayDen" id="ngayDenDH" required />
+                                    <input type="hidden" name="ngayDi" id="ngayDiDH" required />
+                                    <input type="hidden" name="sld" id="sldDH" required />
+                                    <div class="row">
+                                        <h5 class="modal-title col-10">Xác nhận đặt phòng</h5>
+                                        <button type="button" class="btn-close col-2 me-2" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Hiển thị thông tin người dùng nhập -->
+                                        <p><strong>Ngày đến:</strong> <span id="showNgayDen"></span></p>
+                                        <p><strong>Ngày đi:</strong> <span id="showNgayDi"></span></p>
+                                        <p><strong>Số lượng phòng:</strong> <span id="showSld"></span></p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <p class="fw-bold">Tổng tiền: <span id="tongTien" class="fw-bold text-danger">0 VNĐ</span></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary mx-auto">Xác nhận thanh toán</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<div>
+    @if (lienQuan != null && lienQuan.Count > 0)
+    {
+        <h4 class="mb-3">Các hạng phòng khác bạn có thể thích</h4>
+        <div class="row">
+            @foreach (var item in lienQuan)
+            {
+                var tongLienQuan = item.Phongs.Count();
+                var trongLienQuan = item.Phongs.Count(p => p.TinhTrang.Trim() == "Trống");
+
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <img class="card-img-top" src="~/Content/Images/@item.HinhAnhs.FirstOrDefault(n => n.Stt == 1).HinhAnh1"
+                                     style="height:180px; center /cover no-repeat;" />
+                            </div>
+                            <h6 class="card-title mb-1">@item.BienThe</h6>
+                            <span class="badge bg-info text-dark mb-2">
+                                Hạng phòng: @item.LoaiPhong.TenLoai
+                            </span>
+                            <p class="small mb-1 text-danger fw-bold">
+                                @String.Format("{0:N0} VNĐ / đêm", item.GiaBan)
+                            </p>
+                            <p class="small text-muted mb-2">
+                                Còn trống: <strong>@trongLienQuan</strong> / @tongLienQuan phòng
+                            </p>
+                            <a href="@Url.Action("ChiTietBienThe","Phong", new { id = item.MaBienThe })"
+                               class="btn btn-sm text-white"
+                               style="background:#004E7C;">
+                                Xem chi tiết
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<script>
+    setupCopyOnSubmit("gioForm", [
+        { sourceId: "ngayDen", targetId: "ngayDenGH" },
+        { sourceId: "ngayDi", targetId: "ngayDiGH" },
+        { sourceId: "sld", targetId: "sldGH" }
+    ]);
+    setupCopyOnSubmit("datPhongForm", [
+        { sourceId: "ngayDen", targetId: "ngayDenDH" },
+        { sourceId: "ngayDi", targetId: "ngayDiDH" },
+        { sourceId: "sld", targetId: "sldDH" }
+    ]);
+
+    function changeMainImage(src) {
+        var mainImg = document.getElementById('mainImageDisplay');
+        mainImg.style.opacity = 0;
+        setTimeout(function () {
+            mainImg.src = src;
+            mainImg.style.opacity = 1;
+        }, 150);
+    }
+    function setupCopyOnSubmit(formId, mappings) {
+        const form = document.getElementById(formId);
+
+        form.addEventListener("submit", function (e) {
+            // duyệt qua từng cặp input
+            mappings.forEach(({ sourceId, targetId }) => {
+                const source = document.getElementById(sourceId);
+                const target = document.getElementById(targetId);
+
+                // nếu input gốc chưa hợp lệ, để trình duyệt báo lỗi required mặc định
+                if (!source.checkValidity()) {
+                    source.reportValidity();
+                    e.preventDefault(); // chặn submit để hiện lỗi
+                    return;
+                }
+
+                // copy giá trị sang hidden input
+                target.value = source.value;
+            });
+        });
+    }
+
+    const giaPhong = document.getElementById("giaPhong").value;
+
+    function tinhTongTien() {
+        const ngayDen = document.getElementById("ngayDen").value;
+        const ngayDi = document.getElementById("ngayDi").value;
+        const sld = parseInt(document.getElementById("sld").value) || 0;
+
+        if (ngayDen && ngayDi && sld > 0) {
+            const start = new Date(ngayDen);
+            const end = new Date(ngayDi);
+
+            // Tính số ngày
+            const soNgay = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+
+            if (soNgay > 0) {
+                const tong = soNgay * sld * giaPhong;
+                document.getElementById("tongTien").textContent = tong.toLocaleString("vi-VN") + " VNĐ";
+            } else {
+                document.getElementById("tongTien").textContent = "Ngày đi phải sau ngày đến!";
+            }
+        } else {
+            document.getElementById("tongTien").textContent = "0 VNĐ";
+        }
+    }
+    function copyToSpan(sourceId, targetId, type = "text") {
+        const source = document.getElementById(sourceId);
+        const target = document.getElementById(targetId);
+
+        source.addEventListener("input", function () {
+            if (!this.value) {
+                target.textContent = "";
+                return;
+            }
+
+            if (type === "date") {
+                // Định dạng ngày DD/MM/YYYY
+                const d = new Date(this.value);
+                const day = String(d.getDate()).padStart(2, "0");
+                const month = String(d.getMonth() + 1).padStart(2, "0");
+                const year = d.getFullYear();
+                target.textContent = `${day}/${month}/${year}`;
+            } else if (type === "number") {
+                // Hiển thị số trực tiếp
+                target.textContent = this.value;
+            } else {
+                // Mặc định copy text
+                target.textContent = this.value;
+            }
+        });
+    }
+    copyToSpan("ngayDen", "showNgayDen");
+    copyToSpan("ngayDi", "showNgayDi");
+    copyToSpan("sld", "showSld");
+    // Gắn sự kiện cho các input
+    document.getElementById("ngayDen").addEventListener("change", tinhTongTien);
+    document.getElementById("ngayDi").addEventListener("change", tinhTongTien);
+    document.getElementById("sld").addEventListener("input", tinhTongTien);
+</script>

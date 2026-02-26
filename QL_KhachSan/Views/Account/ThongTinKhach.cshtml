@@ -1,0 +1,47 @@
+﻿@model QL_KhachSan.Models.KhachHang
+@{
+    ViewBag.Title = "Profile của bạn";
+}
+
+<div class="card mx-auto shadow-lg border-0" style="max-width: 560px; border-radius: 16px; overflow: hidden;">
+    <div class="card-header text-white py-4 text-center"
+         style="background: linear-gradient(135deg, #9C7A5A 0%, #B89F86 100%);">
+        <h3 class="mb-0 fw-bold fs-4">Thông tin cá nhân</h3>
+    </div>
+
+    <div class="card-body p-4 p-lg-5 bg-light">
+        <!-- Avatar với chữ cái đầu tên -->
+        <div class="text-center mb-4">
+            <div class="avatar-placeholder mx-auto bg-white border border-4 border-white shadow d-flex align-items-center justify-content-center"
+                 style="width: 110px; height: 110px; border-radius: 50%; font-size: 3rem; color: #9C7A5A;">
+                @Model.TenKH.Substring(0, 1).ToUpper()
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-sm-5 fw-semibold" style="color: #8B6F47;">Họ và tên</div>
+            <div class="col-sm-7">@Model.TenKH</div>
+
+            <div class="col-sm-5 fw-semibold" style="color: #8B6F47;">Email</div>
+            <div class="col-sm-7">@Model.Gmail</div>
+
+            <div class="col-sm-5 fw-semibold" style="color: #8B6F47;">Giới tính</div>
+            <div class="col-sm-7">@Model.GioiTinh</div>
+
+            <div class="col-sm-5 fw-semibold" style="color: #8B6F47;">Ngày sinh</div>
+            <div class="col-sm-7">@(Model.NgaySinh?.ToString("dd/MM/yyyy") ?? "Chưa cập nhật")</div>
+
+            <div class="col-sm-5 fw-semibold" style="color: #8B6F47;">Tỉnh thành</div>
+            <div class="col-sm-7">@Model.TinhThanh</div>
+        </div>
+
+        <hr class="my-5 border-secondary-subtle">
+
+        <div class="text-center">
+            <a href="@Url.Action("ChinhSuaThongTin")" class="btn btn-lg px-5 py-2 shadow-sm text-white"
+               style="background-color: #9C7A5A; border: none;">
+                <i class="fas fa-edit me-2"></i>Chỉnh sửa thông tin
+            </a>
+        </div>
+    </div>
+</div>

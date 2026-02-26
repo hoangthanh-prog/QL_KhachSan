@@ -1,0 +1,90 @@
+﻿@model QL_KhachSan.Models.ViewModels.BaoCaoDoanhThuVM
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Báo cáo doanh thu";
+}
+
+<div class="container mt-4">
+
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">📊 Báo cáo doanh thu</h4>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Bộ lọc -->
+            <form method="get" class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <label>Từ ngày</label>
+                    <input type="date" name="tuNgay" class="form-control"
+                           value="@Model.TuNgay?.ToString(" yyyy-MM-dd")" />
+                </div>
+
+                <div class="col-md-4">
+                    <label>Đến ngày</label>
+                    <input type="date" name="denNgay" class="form-control"
+                           value="@Model.DenNgay?.ToString(" yyyy-MM-dd")" />
+                </div>
+
+                <div class="col-md-4 d-flex align-items-end">
+                    <button class="btn btn-primary px-4">🔍 Lọc</button>
+                </div>
+            </form>
+
+            <!-- Tổng doanh thu -->
+            <div class="alert alert-info fs-5">
+                💰 <b>Tổng doanh thu:</b>
+                <span class="text-danger fw-bold">
+                    @String.Format("{0:N0} VNĐ", Model.TongDoanhThu)
+                </span>
+            </div>
+
+            <!-- Bảng chi tiết -->
+            <table class="table table-bordered table-hover text-center align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Mã HĐ</th>
+                        <th>Ngày lập</th>
+                        <th>Khách hàng</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model.DanhSachHoaDon.Any())
+                    {
+                        foreach (var hd in Model.DanhSachHoaDon)
+                        {
+                            <tr>
+                                <td>#@hd.MaHD</td>
+                                <td>
+                                    @(hd.NgayLap?.ToString("dd/MM/yyyy"))
+                                </td>
+                                <td>@hd.KhachHang.TenKH</td>
+                                <td class="text-danger fw-bold">
+                                    @String.Format("{0:N0} VNĐ", hd.TongTien)
+                                </td>
+                                <td>
+                                    <span class="badge bg-success">
+                                        @hd.TinhTrang
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-muted">
+                                Không có dữ liệu
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>

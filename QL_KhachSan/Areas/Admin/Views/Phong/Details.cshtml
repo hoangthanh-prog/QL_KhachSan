@@ -1,0 +1,141 @@
+﻿@model QL_KhachSan.Models.ViewModels.PhongDetailVM
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Chi tiết phòng";
+}
+
+<div class="container mt-4">
+
+    <div class="card shadow border-0 rounded-3">
+
+        <!-- HEADER -->
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">📘 Chi tiết phòng</h4>
+        </div>
+
+        <div class="card-body p-4">
+            <div class="row">
+
+                <!-- ================= BÊN TRÁI: THÔNG TIN ================= -->
+                <div class="col-md-7">
+
+                    <table class="table table-bordered align-middle">
+                        <tbody>
+                            <tr>
+                                <th width="30%" class="bg-light">Mã phòng</th>
+                                <td>@Model.Phong.MaPhong</td>
+                            </tr>
+
+                            <tr>
+                                <th class="bg-light">Tên phòng</th>
+                                <td>@Model.Phong.TenPhong</td>
+                            </tr>
+
+                            <tr>
+                                <th class="bg-light">Tình trạng</th>
+                                <td>
+                                    @if (Model.Phong.TinhTrang == "Trống")
+                                    {
+                                        <span class="badge bg-success px-3">Trống</span>
+                                    }
+                                    else if (Model.Phong.TinhTrang == "Đang sử dụng")
+                                    {
+                                        <span class="badge bg-warning text-dark px-3">Đang sử dụng</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary px-3">
+                                            @Model.Phong.TinhTrang
+                                        </span>
+                                    }
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th class="bg-light">Biến thể phòng</th>
+                                <td>
+                                    @Model.Phong.BienThePhong.BienThe
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th class="bg-light">Giá phòng</th>
+                                <td class="fw-bold text-danger">
+                                    @String.Format("{0:N0} VNĐ / đêm",
+                                        Model.Phong.BienThePhong.GiaBan)
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th class="bg-light">Mô tả</th>
+                                <td>
+                                    @Model.Phong.BienThePhong.MoTa
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- NÚT CHỨC NĂNG -->
+                    <div class="mt-4">
+                        @Html.ActionLink("✏ Sửa phòng", "Edit",
+                            new { id = Model.Phong.MaPhong },
+                            new { @class = "btn btn-warning px-4" })
+
+                        @Html.ActionLink("⬅ Quay lại", "Index",
+                            null,
+                            new { @class = "btn btn-secondary px-4 ms-2" })
+                    </div>
+                </div>
+
+                <!-- ================= BÊN PHẢI: HÌNH ẢNH ================= -->
+                <div class="col-md-5">
+
+                    <div class="card shadow-sm p-2">
+
+                        @if (Model.DanhSachHinh != null && Model.DanhSachHinh.Any())
+                        {
+                            <div id="phongCarousel"
+                                 class="carousel slide"
+                                 data-bs-ride="carousel">
+
+                                <div class="carousel-inner">
+                                    @for (int i = 0; i < Model.DanhSachHinh.Count; i++)
+                                    {
+                                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                                            <img src="~/Content/Images/@Model.DanhSachHinh[i].HinhAnh1"
+                                                 class="d-block w-100 rounded"
+                                                 style="height:300px;object-fit:cover;" />
+                                        </div>
+                                    }
+                                </div>
+
+                                <button class="carousel-control-prev"
+                                        type="button"
+                                        data-bs-target="#phongCarousel"
+                                        data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon"></span>
+                                </button>
+
+                                <button class="carousel-control-next"
+                                        type="button"
+                                        data-bs-target="#phongCarousel"
+                                        data-bs-slide="next">
+                                    <span class="carousel-control-next-icon"></span>
+                                </button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center text-muted p-4">
+                                <i>Không có hình ảnh phòng</i>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

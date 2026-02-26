@@ -1,0 +1,88 @@
+﻿@model IEnumerable<QL_KhachSan.Models.HoaDon>
+
+
+@{
+    ViewBag.Title = "Danh Sách Đặt Phòng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<h2 class="mb-3 col-6">Danh sách hóa đơn</h2>
+
+@using (Html.BeginForm("DanhSachHoaDon", "HoaDon", FormMethod.Get))
+{
+    <div class="row mb-3">
+        <div class="col-3">
+            <label>Từ ngày</label>
+            <input type="date" name="tuNgay" class="form-control"
+                   value="@ViewBag.TuNgay?.ToString(" yyyy-MM-dd")" />
+        </div>
+
+        <div class="col-3">
+            <label>Đến ngày</label>
+            <input type="date" name="denNgay" class="form-control"
+                   value="@ViewBag.DenNgay?.ToString(" yyyy-MM-dd")" />
+        </div>
+
+        <div class="col-3">
+            <label>Khách hàng</label>
+            <input type="text" name="TenKH" class="form-control" placeholder="Tìm kiếm tên khách hàng" value="@Request.QueryString["searchString"]" />
+        </div>
+
+        <div class="col-2 d-flex align-items-end">
+            <button class="btn btn-primary px-4" type="submit">Lọc</button>
+        </div>
+
+    </div>
+}
+
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success">@TempData["success"]</div>
+}
+
+<table class="table table-bordered text-center align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>Mã HD</th>
+            <th>Khách hàng</th>
+            <th>Ngày đặt</th>
+            <th>Tình trạng</th>
+            <th>Tổng tiền</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var hd in Model)
+        {
+            <tr>
+                <td>@hd.MaHD</td>
+
+                <td>
+                    @(hd.KhachHang != null ? hd.KhachHang.TenKH : "Không có")
+                    <br />
+                    <small>@(hd.KhachHang != null ? hd.KhachHang.Gmail : "Không có")</small>
+                </td>
+
+                <td>@(hd.NgayLap?.ToString("dd/MM/yyyy") ?? "")</td>
+                <td>
+                    @hd.TinhTrang
+                </td>
+                <td>
+                    @String.Format("{0:#,##0} VNĐ", hd.TongTien)
+                </td>
+
+                <td>
+                    @if (hd.TinhTrang == false)
+                    {
+                        <a class="btn btn-success btn-sm" href="@Url.Action("ThanhToan", new {id = hd.MaHD})">Đã thanh toán</a>
+                    }
+                    @if (hd.TinhTrang == true)
+                    {
+                        <a class="btn btn-warning btn-sm" href="@Url.Action("HuyThanhToan", new {id = hd.MaHD})">Hủy thanh toán</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

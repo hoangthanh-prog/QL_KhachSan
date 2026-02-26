@@ -1,0 +1,40 @@
+﻿@model QL_KhachSan.Models.HoaDon
+
+@{
+    ViewBag.Title = "Xác nhận đặt phòng";
+}
+
+<h2>Đặt phòng thành công</h2>
+
+<p><strong>Mã hóa đơn:</strong> @Model.MaHD</p>
+<p><strong>Ngày lập:</strong> @Model.NgayLap</p>
+<p><strong>Tổng tiền:</strong> @String.Format("{0:N0}", Model.TongTien) VNĐ</p>
+
+@if (Model.KhachHang != null)
+{
+    <p><strong>Khách hàng:</strong> @Model.KhachHang.TenKH</p>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Phòng</th>
+            <th>Ngày bắt đầu</th>
+            <th>Ngày kết thúc</th>
+            <th>Số ngày</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ct in Model.ChiTietHDs)
+        {
+            <tr>
+                <td>@ct.MaPhong</td>
+                <td>@ct.NgayBD?.ToString("dd/MM/yyyy")</td>
+                <td>@ct.NgayKT?.ToString("dd/MM/yyyy")</td>
+                <td>@ct.SoNgay</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Index","Home")" class="btn btn-success">Về trang chủ</a>

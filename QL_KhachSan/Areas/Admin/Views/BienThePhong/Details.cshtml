@@ -1,0 +1,45 @@
+﻿@model QL_KhachSan.Models.BienThePhong
+@{
+    ViewBag.Title = "Chi tiết biến thể phòng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h3 class="mb-3">📘 Chi tiết biến thể phòng</h3>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Mã biến thể</th>
+        <td>@Model.MaBienThe</td>
+    </tr>
+    <tr>
+        <th>Tên biến thể</th>
+        <td>@Model.BienThe</td>
+    </tr>
+    <tr>
+        <th>Giá bán</th>
+        <td>@String.Format("{0:N0} VNĐ", Model.GiaBan)</td>
+    </tr>
+</table>
+
+<hr />
+<h5>📸 Hình ảnh</h5>
+
+<div class="row">
+    @if (Model.HinhAnhs != null && Model.HinhAnhs.Any())
+    {
+        foreach (var img in Model.HinhAnhs.OrderBy(x => x.Stt))
+        {
+            <div class="col-md-3 mb-3">
+                <img src="~/Content/Images/@img.HinhAnh1"
+                     class="img-fluid rounded shadow"
+                     style="height:150px; object-fit:cover" />
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-muted">Chưa có hình ảnh</p>
+    }
+</div>
+
+@Html.ActionLink("⬅ Quay lại", "Index", null, new { @class = "btn btn-secondary mt-3" })

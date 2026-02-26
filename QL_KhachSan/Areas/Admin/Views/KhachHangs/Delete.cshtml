@@ -1,0 +1,51 @@
+﻿@model QL_KhachSan.Models.KhachHang
+
+@{
+    ViewBag.Title = "Trang Xóa Khách Hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h4>Bạn có chắc sẽ xóa khách hàng này không?</h4>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Mã khách hàng</th>
+        <td>@Model.MaKH</td>
+    </tr>
+    <tr>
+        <th>Tên khách hàng</th>
+        <td>@Model.TenKH</td>
+    </tr>
+    <tr>
+        <th>Gmail</th>
+        <td>@Model.Gmail</td>
+    </tr>
+    <tr>
+        <th>Mật khẩu</th>
+        <td>@Model.MatKhau</td>
+    </tr>
+
+    <tr>
+        <th>Giới tính</th>
+        <td>@Model.GioiTinh</td>
+    </tr>
+
+    <tr>
+        <th>Ngày sinh</th>
+        <td>@Model.NgaySinh</td>
+    </tr>
+
+    <tr>
+        <th>Tỉnh thành</th>
+        <td>@Model.TinhThanh</td>
+    </tr>
+</table>
+
+@using (Html.BeginForm("DeleteConfirmed", "KhachHangs", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.MaKH" />
+    <input type="submit" value="Xóa" class="btn btn-danger" />
+    @Html.ActionLink("Hủy", "Index", null, new { @class = "btn btn-default" })
+}
+

@@ -1,0 +1,240 @@
+﻿@model IEnumerable<QL_KhachSan.Models.BienThePhong>
+@{
+    ViewBag.Title = "Danh sách phòng";
+
+    string keyword = ViewBag.Keyword as string;
+    decimal? minPrice = ViewBag.MinPrice as decimal?;
+    decimal? maxPrice = ViewBag.MaxPrice as decimal?;
+    string sort = ViewBag.Sort as string ?? "gia_asc";
+    int flagPageE = 0;
+}
+
+<div class="p-4 mb-4 rounded-3" style="background: linear-gradient(135deg,#00AEEF,#004E7C); color:white;">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2 class="fw-bold mb-2">Khám phá phòng tại HUIT Hotel</h2>
+            <p class="mb-0">
+                Chọn hạng phòng phù hợp với chuyến đi của bạn – đầy đủ tiện nghi, giá tốt, vị trí thuận tiện.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="card-body">
+    <h5 class="card-title mb-3">Tìm kiếm hạng phòng</h5>
+
+    @using (Html.BeginForm("DanhSachBienThe", "Phong", FormMethod.Get, new { @class = "row gy-3" }))
+    {
+        <div class="col-md-4">
+            <label class="form-label">Tên hạng phòng</label>
+            @Html.DropDownList("keyword",
+                               ViewBag.HangPhongList as SelectList,
+                               "--- Tất cả hạng phòng ---",
+                               new { @class = "form-select" })
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Khoảng giá</label>
+            @Html.DropDownList("priceRange",
+                               ViewBag.PriceRangeList as SelectList,
+                               "--- Tất cả mức giá ---",
+                               new { @class = "form-select" })
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Sắp xếp theo</label>
+            <select name="sort" class="form-select">
+                <option value="gia_asc" @(ViewBag.Sort == "gia_asc" ? "selected" : "")>Giá tăng dần</option>
+                <option value="gia_desc" @(ViewBag.Sort == "gia_desc" ? "selected" : "")>Giá giảm dần</option>
+                <option value="trong_desc" @(ViewBag.Sort == "trong_desc" ? "selected" : "")>Nhiều phòng trống nhất</option>
+                <option value="trong_asc" @(ViewBag.Sort == "trong_asc" ? "selected" : "")>Ít phòng trống nhất</option>
+            </select>
+        </div>
+
+        <!-- 📌 Thêm phần lọc theo ngày -->
+        <div class="col-md-3">
+            <label class="form-label">Ngày đến</label>
+            <input type="date" name="ngayDen" value="@ViewBag.NgayDen" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Ngày đi</label>
+            <input type="date" name="ngayDi" value="@ViewBag.NgayDi" class="form-control" />
+        </div>
+
+        <!-- 📌 Thêm phần lọc theo số lượng phòng -->
+        <div class="col-md-2">
+            <label class="form-label">Số lượng phòng</label>
+            <input type="number" name="slp" value="@ViewBag.SLP" min="1" class="form-control" />
+        </div>
+
+        <input type="hidden" name="timPhong" value="@ViewBag.TimPhong" />
+
+        <div class="col-md-1 d-flex align-items-end">
+            <button type="submit" class="btn w-100 text-white" style="background:#00AEEF;">
+                Lọc
+            </button>
+        </div>
+    }
+
+</div>
+
+<br />
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Không tìm thấy hạng phòng nào phù hợp với tiêu chí của bạn. Thử điều chỉnh lại bộ lọc nhé.
+    </div>
+}
+else
+{
+    <div class="container-fluid px-4 ">
+        @foreach (var item in Model.Take(5))
+        {
+            var tong = item.Phongs.Count();
+            var trong = item.Phongs.Count(p => p.TinhTrang.Trim() == "Trống");
+            var percent = tong > 0 ? (int)(trong * 100.0 / tong) : 0;
+            var fileAnh = item.HinhAnhs.FirstOrDefault()?.HinhAnh1?.Trim();
+            var urlBg = !string.IsNullOrEmpty(fileAnh) ? Url.Content("~/Content/Images/" + fileAnh) : "https://via.placeholder.com/800x600?text=No+Image";
+
+            <div class="room-card mb-5 shadow">
+                <div class="row g-0">
+                    <!-- Ảnh bên trái (40% trên desktop) -->
+                    <div class="col-lg-5">
+                        <div class="room-img" style="background: url('@urlBg') center/cover no-repeat; height: 350px;width: 100%"></div>
+                    </div>
+
+                    <!-- Nội dung bên phải -->
+                    <div class="col-lg-7">
+                        <div class="room-content d-flex flex-column">
+                            <div class="p-3 pe-5 ps-5">
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <div>
+                                        <h3 class="mb-1 fw-bold text-dark">@item.BienThe</h3>
+                                    </div>
+                                </div>
+
+                                <p class="text-muted" style="line-height: 1.7; font-size: 1.05rem;">
+                                    @item.MoTa
+                                </p>
+
+                                <div class="mt-auto">
+                                    <div class="d-flex align-items-end justify-content-between">
+                                        <div>
+                                            <p class="mb-2 text-muted small">Phòng trống hôm nay</p>
+                                            <p class="fs-4 fw-bold text-success mb-2">@trong / @tong phòng</p>
+                                            <div class="progress rounded-pill" style="height: 10px; width: 280px;">
+                                                <div class="progress-bar" role="progressbar"
+                                                     style="width: @percent%; background: linear-gradient(90deg, #00AEEF, #0099CC);"
+                                                     aria-valuenow="@percent" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="text-end">
+                                            <div class="mb-1 text-muted">Chỉ từ</div>
+                                            <div class="text-warning fw-bold" style="font-size: 24px;">@String.Format("{0:N0}", item.GiaBan) <span style="font-size:1.2rem;">VNĐ</span></div>
+                                            <div class="text-muted small mb-3">/ đêm</div>
+                                            <a href="@Url.Action("ChiTietBienThe", "Phong", new { id = item.MaBienThe })"
+                                               class="btn btn-outline-primary px-5 py-3 fw-bold">
+                                                <i class="fas fa-calendar-check me-2"></i> Xem chi tiết & đặt phòng
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="text-center">
+        @if (ViewBag.Page == 1)
+        {
+            <a href="#"
+               class="btn btn-outline-primary mx-1">
+                <
+            </a>
+        }
+        else
+        {
+            <a href="@Url.Action("DanhSachBienThe", "Phong", new { page = ViewBag.Page - 1, keyword = ViewBag.Keyword,
+                priceRange = ViewBag.PriceRange, sort = ViewBag.Sort, timPhong = ViewBag.TimPhong, ngayDi = ViewBag.NgayDi, ngayDen = ViewBag.NgayDen,
+                slp = ViewBag.SLP})"
+               class="btn btn-outline-primary mx-1">
+                <
+            </a>
+        }
+        @if (ViewBag.Page != 1)
+        {
+            <a href="@Url.Action("DanhSachBienThe", "Phong", new { page = 1, keyword = ViewBag.Keyword,
+                    priceRange = ViewBag.PriceRange, sort = ViewBag.Sort, timPhong = ViewBag.TimPhong, ngayDi = ViewBag.NgayDi, ngayDen = ViewBag.NgayDen,
+                slp = ViewBag.SLP})"
+               class="btn btn-outline-primary mx-1">
+                1
+            </a>
+            if (ViewBag.Page != 1 && ViewBag.Page != 2)
+            {
+                <a>...</a>
+            }
+        }
+
+        @for (int i = 2; i < ViewBag.Page; i++)
+        {
+            <a href="@Url.Action("DanhSachBienThe", "Phong", new { page = i, keyword = ViewBag.Keyword, priceRange = ViewBag.PriceRange,
+                    sort = ViewBag.Sort, timPhong = ViewBag.TimPhong, ngayDi = ViewBag.NgayDi, ngayDen = ViewBag.NgayDen, slp = ViewBag.SLP})"
+               class="btn btn-outline-primary mx-1 e">
+                @i
+            </a>
+        }
+        @for (int i = ViewBag.Page; i < ViewBag.TotalPages; i++)
+        {
+            if (flagPageE == 2) { break; }
+            if (i == ViewBag.Page)
+            {
+                <span class="btn btn-primary mx-1">@i</span>
+            }
+            else
+            {
+                <a href="@Url.Action("DanhSachBienThe", "Phong", new { page = i, keyword = ViewBag.Keyword, priceRange = ViewBag.PriceRange,
+                        sort = ViewBag.Sort, timPhong = ViewBag.TimPhong, ngayDi = ViewBag.NgayDi, ngayDen = ViewBag.NgayDen, slp = ViewBag.SLP})"
+                   class="btn btn-outline-primary mx-1">
+                    @i
+                </a>
+            }
+            flagPageE++;
+        }
+
+        @if (ViewBag.Page == ViewBag.TotalPages)
+        {
+            <span class="btn btn-primary mx-1">@ViewBag.TotalPages</span>
+        }
+        else
+        {
+            if (ViewBag.Page != ViewBag.TotalPages - 1 && ViewBag.Page != ViewBag.TotalPages)
+            {
+                <a>...</a>
+            }
+            <a href="@Url.Action("DanhSachBienThe", "Phong", new { page = ViewBag.TotalPages, keyword = ViewBag.Keyword,
+                    priceRange = ViewBag.PriceRange, sort = ViewBag.Sort, timPhong = ViewBag.TimPhong, ngayDi = ViewBag.NgayDi, ngayDen = ViewBag.NgayDen, slp = ViewBag.SLP})"
+               class="btn btn-outline-primary mx-1">
+                @ViewBag.TotalPages
+            </a>
+        }
+        @if (ViewBag.Page != ViewBag.TotalPages)
+        {
+            <a href="@Url.Action("DanhSachBienThe", "Phong", new { page = ViewBag.Page + 1, keyword = ViewBag.Keyword, priceRange = ViewBag.PriceRange,
+                sort = ViewBag.Sort, timPhong = ViewBag.TimPhong, ngayDi = ViewBag.NgayDi, ngayDen = ViewBag.NgayDen, slp = ViewBag.SLP})"
+               class="btn btn-outline-primary mx-1">
+                >
+            </a>
+        }
+        else
+        {
+            <a href="#"
+               class="btn btn-outline-primary mx-1">
+                >
+            </a>
+        }
+    </div>
+}

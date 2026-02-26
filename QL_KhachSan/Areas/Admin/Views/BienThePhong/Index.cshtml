@@ -1,0 +1,35 @@
+﻿@model IEnumerable<QL_KhachSan.Models.BienThePhong>
+@{
+    ViewBag.Title = "Quản lý biến thể phòng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Quản lý biến thể phòng</h2>
+
+<p>
+    @Html.ActionLink("+ Thêm biến thể", "Create", null, new { @class = "btn btn-success" })
+</p>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Mã biến thể</th>
+        <th>Tên biến thể</th>
+        <th>Mô tả</th>
+        <th width="200px">Chức năng</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td style="min-width: 120px;">@item.MaBienThe</td>
+            <td>@item.BienThe</td>
+            <td>@item.MoTa</td>
+            <td>
+                @Html.ActionLink("Sửa", "Edit", new { id = item.MaBienThe }, new { @class = "btn btn-warning btn-sm" })
+                @Html.ActionLink("Chi tiết", "Details", new { id = item.MaBienThe }, new { @class = "btn btn-info btn-sm" })
+                @Html.ActionLink("Xóa", "Delete", new { id = item.MaBienThe }, new { @class = "btn btn-danger btn-sm" })
+            </td>
+        </tr>
+    }
+</table>
+

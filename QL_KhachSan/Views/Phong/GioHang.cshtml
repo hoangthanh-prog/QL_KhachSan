@@ -1,0 +1,189 @@
+﻿@model QL_KhachSan.Models.Cart
+@{
+    ViewBag.Title = "GioHang";
+}
+
+<style>
+    .header {
+        background: #1E3A8A;
+        color: white;
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            margin-top: 10px;
+            opacity: 0.95;
+        }
+
+    .cart-item {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,174,239,0.1);
+        margin: 20px auto;
+        max-width: 900px;
+        transition: all 0.3s;
+    }
+
+    .room-img {
+        width: 140px;
+        height: 110px;
+        object-fit: cover;
+    }
+
+    .room-info h4 {
+        color: #00AEEF;
+        margin: 0 0 8px 0;
+    }
+
+    .room-type {
+        background: #7C3AED;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+    }
+
+    .btn-remove {
+        color: #ff4444;
+        font-size: 1.3rem;
+    }
+
+        .btn-remove:hover {
+            color: #cc0000;
+        }
+
+    .total-box {
+        background: #F59E0B;
+        color: white;
+        text-align: center;
+        padding: 35px;
+        border-radius: 16px;
+        max-width: 900px;
+        margin: 50px auto;
+        box-shadow: 0 10px 30px rgba(0,174,239,0.3);
+    }
+
+        .total-box h2 {
+            margin: 0 0 10px 0;
+            font-size: 2.2rem;
+        }
+
+        .total-box .total-price {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+    .btn-pay {
+        background: white;
+        color: #1E3A8A;
+        font-weight: bold;
+        padding: 15px 60px;
+        border-radius: 50px;
+        font-size: 1.3rem;
+        border: none;
+        margin-top: 15px;
+    }
+
+        .btn-pay:hover {
+            background: #f0f0f0;
+            transform: scale(1.05);
+        }
+</style>
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info">@TempData["Message"]</div>
+}
+<div class="header">
+    <h1><i class="fas fa-shopping-cart me-3"></i>Giỏ hàng của bạn</h1>
+</div>
+<div class="container">
+    @if (Model != null && Model.cart.Count > 0)
+    {
+        foreach (var i in Model.cart)
+        {
+            var fileAnh = i.HinhAnh.Trim();
+            string ngayDenValue = i.NgayBD.ToString("dd/MM");
+            string ngayDiValue = i.NgayKT.ToString("dd/MM");
+            string soDem = (i.NgayKT - i.NgayBD).Days.ToString();
+            string idmodal = "myModal" + i.TenBienThe;
+            <div class="cart-item">
+                <div class="row g-0 align-items-center">
+                    <div class="col-lg-3 text-center p-3">
+                        <img class="card-img" src="~/Content/Images/@fileAnh">
+                    </div>
+                    <div class="col-lg-6 p-4">
+                        <h4 class="mb-2">@i.TenBienThe <span class="room-type">@i.HangPhong</span></h4>
+                        <p class="mb-3 text-muted">
+                            <i class="far fa-calendar-alt text-primary"></i> @ngayDenValue-@ngayDiValue • @soDem Đêm • @i.SLPhong Phòng
+                        </p>
+                        @{
+                            int id = i.MaBienThe;
+                            string modalid = "addClassModal_" + id;
+
+                        }
+
+                        <button type="button" class="btn btn-success" title="Chỉnh lại thông tin giỏ"
+                                data-bs-toggle="modal" data-bs-target="#@modalid">
+                            Chỉnh sửa lại thông tin
+                        </button>
+
+                        <div class="modal fade" id="@modalid" tabindex="-1" aria-hidden="true">
+                            @Html.Action("CapNhatGio", new { MaBT = i.MaBienThe })
+                        </div>
+
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="text-warning fw-bold" style="font-size: 20px">@i.ThanhTien.ToString("N0") VNĐ</div>
+                    </div>
+                    <div class="col-1 text-center">
+                        <a href="@Url.Action("XoaKhoiGio", new { MaBT = i.MaBienThe })" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                    </div>
+                </div>
+            </div>
+        }
+        using (Html.BeginForm("ThanhToanToanBo", "Phong", FormMethod.Post, new { @onsubmit = "return showConfirm(event)" }))
+        {
+            <div class="total-box">
+                <h2>Tổng thanh toán</h2>
+                <div class="total-price">@Model.TongTien().ToString("N0") VNĐ</div>
+                <p>Đã bao gồm thuế và phí dịch vụ</p>
+                <button class="btn-pay">
+                    <i class="fas fa-credit-card me-2"></i>TIẾN HÀNH THANH TOÁN
+                </button>
+            </div>
+        }
+    }
+    else
+    {
+        <h4 class="text-center mt-3">
+            Giỏ hàng của bạn đang trống. Vui lòng thêm phòng để thanh toán.
+        </h4>
+    }
+</div>
+<script>
+    function showConfirm(e) {
+        e.preventDefault(); // chặn submit mặc định
+        Swal.fire({
+            title: 'Xác nhận thanh toán toàn bộ giỏ hàng!',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Đồng ý',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                e.target.submit(); // nếu người dùng chọn Đồng ý thì submit form
+            }
+        });
+        return false;
+    }
+</script> 

@@ -1,0 +1,33 @@
+﻿@model QL_KhachSan.Models.Phong
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Xóa phòng";
+}
+
+<h4>Bạn có chắc muốn xóa phòng này không?</h4>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Mã phòng</th>
+        <td>@Model.MaPhong</td>
+    </tr>
+    <tr>
+        <th>Tên phòng</th>
+        <td>@Model.TenPhong</td>
+    </tr>
+    <tr>
+        <th>Tình trạng</th>
+        <td>@Model.TinhTrang</td>
+    </tr>
+    <tr>
+        <th>Biến thể</th>
+        <td>@Model.MaBienThe</td>
+    </tr>
+</table>
+
+@using (Html.BeginForm("DeleteConfirmed", "Phong", new { id = Model.MaPhong }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <input type="submit" value="Xóa" class="btn btn-danger" />
+    @Html.ActionLink("Hủy", "Index", null, new { @class = "btn btn-default" })
+}

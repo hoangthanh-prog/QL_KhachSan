@@ -1,0 +1,65 @@
+﻿@model IEnumerable<QL_KhachSan.Models.KhachHang>
+
+@{
+    ViewBag.Title = "Danh Sách Khách Hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+<div class="row">
+    <div class="col-sm-5">
+        <p>
+            @Html.ActionLink("Thêm khách hàng", "Create", null, new { @class = "btn btn-success" })
+        </p>
+    </div>
+
+    <div class="col-sm-7">
+        @using (Html.BeginForm("Index", "KhachHangs", FormMethod.Get))
+        {
+            <div class="input-group mb-3">
+                <input type="text"
+                       name="search"
+                       class="form-control"
+                       placeholder="Nhập tên, Gmail hoặc Tỉnh thành..."
+                       value="@Request["search"]" />
+
+                <button type="submit" class="btn btn-primary">
+                    Tìm kiếm
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Tên khách hàng</th>
+            <th>Giới tính</th>
+            <th>Ngày sinh</th>
+            <th>Tỉnh thành</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.TenKH</td>
+                <td>@p.GioiTinh</td>
+                <td>@(p.NgaySinh?.ToString("dd/MM/yyyy"))</td>
+                <td>@p.TinhThanh</td>
+                <td>
+                    @Html.ActionLink("Chi tiết", "Details", new { id = p.MaKH }, new { @class = "btn btn-info btn-sm me-2" })
+                    @Html.ActionLink("Sửa", "Edit", new { id = p.MaKH }, new { @class = "btn btn-warning btn-sm me-2" })
+                    @Html.ActionLink("Xóa", "Delete", new { id = p.MaKH }, new { @class = "btn btn-danger btn-sm me-2" })
+                    @Html.ActionLink("Đặt phòng", "DatPhong", new { MaKH = p.MaKH }, new { @class = "btn btn-success btn-sm me-2" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

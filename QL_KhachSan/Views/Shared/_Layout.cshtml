@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - HUIT Hotel</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        .cart-btn {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            background: #0c3;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: all 0.3s;
+            bottom: 20px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+            .cart-btn:hover {
+                transform: scale(1.12);
+            }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: red;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 2px white;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body style="background:#F5F9FC;">
+    @if (Session["LoaiTK"] != null)
+    {
+        <a class="cart-btn text-decoration-none" href="@Url.Action("GioHang", "Phong")">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count" id="cartCount">@((Session["GioHang"] != null ? ((QL_KhachSan.Models.Cart)Session["GioHang"]).SL_LoaiPhong() : 0))</span>
+        </a>
+    }
+    <nav class="navbar navbar-expand-lg" style="background:#00AEEF;">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center text-white" href="@Url.Action("Index","Home")">
+                <img src="~/Content/Images/logo.png" alt="logo" height="55" class="me-2 rounded-circle" />
+                <span class="fw-bold">HUIT Hotel</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav ms-3 me-auto mb-2 mb-lg-0">
+                    @Html.Action("_Menu", "Phong")
+                </ul>
+
+                @using (Html.BeginForm("DanhSachBienThe", "Phong", FormMethod.Get, new { @class = "row gy-3 me-2" }))
+                {
+                    <div class="col-9">
+                        <input class="form-control" type="search" name="timPhong" placeholder="Tìm phòng..." />
+                    </div>
+                    <button class="btn col-3" type="submit" style="border:1px solid #FFFFFF;color:#FFFFFF;">Tìm</button>
+                }
+
+                @if (Session["LoaiTK"] == null)
+                {
+                    <a href="@Url.Action("DangNhapKhachHang","Account")"
+                       class="btn ms-3 text-white"
+                       style="background:#004E7C;border:none;">
+                        Đăng nhập
+                    </a>
+                    <a href="@Url.Action("DangKyKhachHang","Account")"
+                       class="btn ms-3 btn-warning">
+                        Đăng ký
+                    </a>
+                }
+                else if (Session["LoaiTK"].ToString() == "KhachHang")
+                {
+                    <a class="ms-3 text-white fw-bold text-decoration-none" href="@Url.Action("ThongTinKhach", "Account")">
+                        Xin chào @Session["TenKH"].ToString().Split(' ').Last()
+                    </a>
+
+                    <a href="@Url.Action("DangXuat","Account")"
+                       class="btn ms-3 text-white"
+                       style="background:#004E7C;border:none;">
+                        Đăng xuất
+                    </a>
+                }
+                else if (Session["LoaiTK"].ToString() == "NhanVien")
+                {
+                    <a href="@Url.Action("DangXuat","Account")"
+                       class="btn ms-2 text-white"
+                       style="background:#004E7C;border:none;">
+                        Đăng xuất
+                    </a>
+                }
+            </div>
+        </div>
+    </nav>
+
+    <div class="container body-content mt-4">
+        @RenderBody()
+
+    </div>
+    <hr />
+    <footer class="footer pt-4 pb-3" style="background:#004E7C;color:#FFFFFF;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5 class="fw-bold">HUIT Hotel</h5>
+                    <p>Mang đến cho bạn những trải nghiệm thoải mái và vui vẻ nhất.</p>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <h5 class="fw-bold">Liên kết nhanh</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light text-decoration-none">Trang chủ</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Phòng</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Dịch vụ</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Liên hệ</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <h5 class="fw-bold">Liên hệ</h5>
+                    <p>140 Đường Lê Trọng Tấn, TP.HCM</p>
+                    <p>0909 339 779</p>
+                    <p>contact@huit-hotel.com</p>
+                </div>
+            </div>
+            <hr class="border-light">
+            <div class="text-center">
+                <small>&copy; @DateTime.Now.Year HUIT Hotel. All rights reserved.</small>
+            </div>
+        </div>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

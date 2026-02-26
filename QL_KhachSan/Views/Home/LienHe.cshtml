@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "Liên hệ";
+}
+
+<div class="container py-4">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold" style="color: #004E7C;">LIÊN HỆ VỚI CHÚNG TÔI</h2>
+        <p class="text-muted">Chúng tôi luôn sẵn sàng lắng nghe bạn</p>
+    </div>
+
+    <div class="row shadow-sm border rounded overflow-hidden">
+        <div class="col-lg-5 bg-white p-4">
+            <h4 class="mb-4 fw-bold">Thông tin liên hệ</h4>
+            <div class="mb-3">
+                <i class="bi bi-geo-alt-fill text-info me-2"></i>
+                <span>140 Lê Trọng Tấn, P. Tây Thạnh, Q. Tân Phú, TP.HCM</span>
+            </div>
+            <div class="mb-3">
+                <i class="bi bi-telephone-fill text-info me-2"></i>
+                <span>Hotline: 0123.456.789</span>
+            </div>
+            <div class="mb-4">
+                <i class="bi bi-envelope-fill text-info me-2"></i>
+                <span>Email: booking@huithotel.com</span>
+            </div>
+
+            <div class="map-container rounded overflow-hidden">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.062369408434!2d106.62637057481855!3d10.806537758639998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752be27d8b4f4d%3A0x92dcba2950430867!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBDw7RuZyB0aMawxqFuZyBUUC4gSOG7kyBDaMOtIE1pbmggKEhVSVQp!5e0!3m2!1svi!2s!4v1700000000000!5m2!1svi!2s"
+                        width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+
+        <div class="col-lg-7 p-4" style="background-color: #f8f9fa;">
+            <h4 class="mb-4 fw-bold">Gửi thắc mắc cho chúng tôi</h4>
+
+            @using (Html.BeginForm("GuiLienHe", "Home", FormMethod.Post))
+            {
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Họ và tên</label>
+                        <input type="text" class="form-control" name="HoTen" required placeholder="Nhập họ tên...">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Số điện thoại</label>
+                        <input type="tel" class="form-control" name="SDT" placeholder="Nhập SĐT...">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="Email" required placeholder="name@example.com">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Nội dung</label>
+                        <textarea class="form-control" name="NoiDung" rows="4" placeholder="Bạn cần hỗ trợ gì?"></textarea>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn text-white w-100 py-2 fw-bold" style="background: #00AEEF;">
+                            GỬI TIN NHẮN
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

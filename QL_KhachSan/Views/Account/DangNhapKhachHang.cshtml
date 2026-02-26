@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "Đăng nhập khách hàng";
+}
+
+<div class="container">
+    <div class="row justify-content-center mt-5 mb-5">
+        <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="card-body p-4 p-md-5">
+                    <h2 class="text-center mb-4 fw-bold text-primary">Đăng nhập</h2>
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @ViewBag.Error
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    @using (Html.BeginForm("DangNhapKhachHang", "Account", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-floating mb-3">
+                            <input type="email" name="Gmail" class="form-control" id="floatingEmail" placeholder="Nhập email..." required />
+                            <label for="floatingEmail">Gmail</label>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input type="password" name="MatKhau" class="form-control" id="floatingPassword" placeholder="Nhập mật khẩu..." />
+                            <label for="floatingPassword">Mật khẩu</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-lg w-100 shadow-sm"
+                                style="background: linear-gradient(to right, #28a745, #20c997); border: none;">
+                            Đăng nhập
+                        </button>
+                    }
+
+                    <div class="text-center mt-4">
+                        <a href="@Url.Action("DangKyKhachHang", "Account")" class="text-decoration-none text-muted">
+                            Chưa có tài khoản? <strong class="text-primary">Đăng ký ngay</strong>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

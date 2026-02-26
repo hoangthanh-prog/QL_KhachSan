@@ -1,0 +1,81 @@
+﻿@model IEnumerable<QL_KhachSan.Models.Phong>
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Danh sách phòng";
+}
+@using (Html.BeginForm("index", "Phong", FormMethod.Get, new { @class = "row gy-3 mb-3 align-items-center" }))
+{
+    <div class="col-md-3">
+        @Html.DropDownList("LoaiPhong",
+                         ViewBag.HangPhongList as SelectList,
+                         "--- Chọn hạng phòng ---",
+                         new { @class = "form-select" })
+    </div>
+    <div class="col-md-3">
+        @Html.DropDownList("BienThe",
+                         ViewBag.BienThePhongList as SelectList,
+                         "--- Chọn loại phòng ---",
+                         new { @class = "form-select " })
+    </div>
+    <div class="col-md-3">
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Chọn tình trạng</label>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="TinhTrang" value="Đã đặt" id="tinhTrangDat">
+                <label class="form-check-label" for="tinhTrangDat">Đã đặt</label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="TinhTrang" value="Trống" id="tinhTrangTrong">
+                <label class="form-check-label" for="tinhTrangTrong">Trống</label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="TinhTrang" value="Đang bảo trì" id="tinhTrangBaoTri">
+                <label class="form-check-label" for="tinhTrangBaoTri">Đang bảo trì</label>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 align-items-end">
+        @Html.ActionLink("Thêm phòng", "Create", null, new { @class = "btn btn-success w-100 mb-3" })
+        <button type="submit" class="btn w-100 text-white" style="background:#00AEEF;">
+            Lọc
+        </button>
+    </div>
+}
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Mã</th>
+            <th>Tên phòng</th>
+            <th>Tình trạng</th>
+            <th>Loại phòng</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.MaPhong</td>
+                <td>@p.TenPhong</td>
+                <td>@p.TinhTrang</td>
+                <td>@p.BienThePhong.BienThe</td>
+                <td>
+                    @Html.ActionLink("Chi tiết", "Details", new { id = p.MaPhong }, new { @class = "btn btn-info btn-sm" })
+                    @Html.ActionLink("Sửa", "Edit", new { id = p.MaPhong }, new { @class = "btn btn-warning btn-sm" })
+                    @Html.ActionLink("Xóa", "Delete", new { id = p.MaPhong }, new { @class = "btn btn-danger btn-sm" })
+                    @if (p.TinhTrang == "Đã đặt")
+                    {
+                        <a class="btn btn-sm btn-success" href="@Url.Action("TraPhong", new {id = p.MaPhong})">Trả phòng</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-sm btn-secondary" href="@Url.Action("NhanPhong", new {id = p.MaPhong})">Nhận phòng</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="da82afcd749e48daa60c9a129d79fd7a" Name="Diagram1">
+        <EntityTypeShape EntityType="QL_KhachSanModel.BienThePhong" Width="1.5" PointX="3" PointY="11.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QL_KhachSanModel.ChiTietHD" Width="1.5" PointX="7.5" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="QL_KhachSanModel.ChucVu" Width="1.5" PointX="0.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="QL_KhachSanModel.HinhAnh" Width="1.5" PointX="5.25" PointY="15" IsExpanded="true" />
+        <EntityTypeShape EntityType="QL_KhachSanModel.HoaDon" Width="1.5" PointX="5.25" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QL_KhachSanModel.KhachHang" Width="1.5" PointX="3" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QL_KhachSanModel.LoaiPhong" Width="1.5" PointX="0.75" PointY="12" IsExpanded="true" />
+        <EntityTypeShape EntityType="QL_KhachSanModel.NhanVien" Width="1.5" PointX="3" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QL_KhachSanModel.Phong" Width="1.5" PointX="5.25" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="QL_KhachSanModel.TaiKhoanNV" Width="1.5" PointX="5.25" PointY="6.375" IsExpanded="true" />
+        <AssociationConnector Association="QL_KhachSanModel.FK_BienThePhong_LoaiPhong" ManuallyRouted="false" />
+        <AssociationConnector Association="QL_KhachSanModel.FK_HinhAnh_BienThePhong" ManuallyRouted="false" />
+        <AssociationConnector Association="QL_KhachSanModel.FK_Phong_BienThePhong" ManuallyRouted="false" />
+        <AssociationConnector Association="QL_KhachSanModel.FK_ChiTietHD_HoaDon" ManuallyRouted="false" />
+        <AssociationConnector Association="QL_KhachSanModel.FK_ChiTietHD_Phong" ManuallyRouted="false" />
+        <AssociationConnector Association="QL_KhachSanModel.FK_NhanVien_ChucVu" ManuallyRouted="false" />
+        <AssociationConnector Association="QL_KhachSanModel.FK_HoaDon_KhachHang" ManuallyRouted="false" />
+        <AssociationConnector Association="QL_KhachSanModel.FK_HoaDon_NhanVien" ManuallyRouted="false" />
+        <AssociationConnector Association="QL_KhachSanModel.FK_TaiKhoanNV_NhanVien" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

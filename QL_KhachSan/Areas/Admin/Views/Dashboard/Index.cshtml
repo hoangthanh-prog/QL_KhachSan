@@ -1,0 +1,210 @@
+﻿@model QL_KhachSan.Models.ViewModels.DashboardViewModel
+@{
+    ViewBag.Title = "Dashboard";
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+
+<div class="container-fluid mt-3">
+
+    <h3 class="fw-bold mb-4">Tổng quan</h3>
+    <p class="text-muted">Chào mừng trở lại! Đây là những gì đang diễn ra hôm nay.</p>
+
+    <!-- 4 thẻ thống kê -->
+    <div class="row g-3">
+
+        <!-- Tổng số phòng -->
+        <div class="col-md-3">
+            <div class="p-3 border rounded shadow-sm bg-white">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <span class="text-muted small">Tổng số phòng</span>
+                        <h3 class="fw-bold">@Model.TongSoPhong</h3>
+                    </div>
+                    <div class="fs-2 text-primary">
+                        <i class="bi bi-building"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phòng đã đặt -->
+        <div class="col-md-3">
+            <div class="p-3 border rounded shadow-sm bg-white">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <span class="text-muted small">Phòng đã đặt</span>
+                        <h3 class="fw-bold">@Model.SoPhongDaDat</h3>
+                    </div>
+                    <div class="fs-2 text-primary">
+                        <i class="bi bi-people"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nhận phòng hôm nay -->
+        <div class="col-md-3">
+            <div class="p-3 border rounded shadow-sm bg-white">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <span class="text-muted small">Hóa đơn hôm nay</span>
+                        <h3 class="fw-bold">@ViewBag.HoaDonHomNay</h3>
+                    </div>
+
+                    <div class="fs-2 text-primary">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doanh thu -->
+        <div class="col-md-3">
+            <div class="p-3 border rounded shadow-sm bg-white">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <span class="text-muted small">Doanh thu (Tháng)</span>
+                        <h3 class="fw-bold">@String.Format("{0:N0}đ", Model.DoanhThuThang)</h3>
+                    </div>
+                    <div class="fs-2 text-primary">
+                        <button class="border-0 bg-light text-primary" type="button" data-bs-toggle="modal" data-bs-target="#DoanhThu"><i class="bi bi-cash-stack"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Progress + booking -->
+    <div class="row g-3 mt-4">
+
+        <!-- Phòng theo loại -->
+        <div class="col-md-7">
+            <div class="p-3 border rounded shadow-sm bg-white">
+                <h5 class="fw-bold mb-3">Tình trạng phòng theo loại</h5>
+
+                @foreach (var item in Model.PhongTheoLoai)
+                {
+                    <div class="d-flex justify-content-between small fw-bold">
+                        <span>@item.TenLoai</span>
+                        <span>@item.DaDat/@item.Tong đã đặt</span>
+                    </div>
+
+                    <div class="progress mb-3" style="height: 18px;">
+                        <div class="progress-bar bg-primary"
+                             role="progressbar"
+                             style="width:@item.PhanTram%"
+                             aria-valuenow="@item.PhanTram"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                            @item.PhanTram%
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Booking gần đây -->
+        <div class="col-md-5">
+
+            <div class="p-3 border rounded shadow-sm bg-white">
+                <div class="row">
+                    <h5 class="fw-bold mb-3 col-9">Đặt phòng gần đây</h5>
+                    <div class="col-3">
+                        @if (ViewBag.Page > 1)
+                        {
+                            <a href="@Url.Action("Index", "Dashboard", new { page = ViewBag.Page - 1})"
+                               class="btn btn-sm btn-outline-primary mx-1"> < </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-sm btn-outline-primary mx-1"><</a>
+                        }
+                        @if (ViewBag.Page < ViewBag.TotalPages)
+                        {
+                            <a href="@Url.Action("Index", "Dashboard", new { page = ViewBag.Page + 1})"
+                               class="btn btn-sm btn-outline-primary mx-1"> > </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-sm btn-outline-primary mx-1">></a>
+                        }
+                    </div>
+                </div>
+
+
+                @foreach (var b in (List<QL_KhachSan.Models.HoaDon>)ViewBag.HoaDon)
+                {
+                    var modalid = "ChiTietHD_" + b.MaHD;
+                    <div class="d-flex justify-content-between align-items-center mb-3 p-2 border rounded bg-light clickable"
+                         data-bs-toggle="modal" data-bs-target="#@modalid" onclick="SubmitEvent">
+                        <div>
+                            <strong>@b.KhachHang.TenKH</strong><br />
+                            <small>Mã hóa đơn: #@b.MaHD</small><br />
+                            <small class="text-muted">@b.NgayLap.Value.ToString("dd/MM/yyyy")</small>
+                        </div>
+                        <span class="badge
+                                  @(b.TinhTrang == true ? "bg-success" :
+                                  b.TinhTrang == false ? "bg-warning text-dark" : "bg-secondary")">
+                            @b.TinhTrang
+                        </span>
+                    </div>
+                    <div class="modal fade" id="@modalid" tabindex="-1" aria-hidden="true">
+                        @Html.Action("_ChiTietHD", new { MaHD = b.MaHD })
+                    </div>
+                }
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- KHU VỰC HIỂN THỊ CHI TIẾT -->
+<div class="modal fade" id="DoanhThu" tabindex="-1" aria-hidden="true">
+    @Html.Action("_DoanhThu")
+</div>
+
+<style>
+    .clickable {
+        cursor: pointer;
+        transition: .2s;
+    }
+
+        .clickable:hover {
+            background: #f3f6ff;
+        }
+</style>
+
+<script>
+function loadDetail(type) {
+    $.ajax({
+        url: '@Url.Action("GetDetail", "Dashboard", new { area = "Admin" })',
+        type: "GET",
+        data: { type: type },
+        success: function (res) {
+            $("#detail-container").html(res);
+        },
+        error: function (xhr) {
+            console.log("ERROR:", xhr.responseText);
+            alert("Không tải được dữ liệu!");
+        }
+    });
+}
+</script>
+

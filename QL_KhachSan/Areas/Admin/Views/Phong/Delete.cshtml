@@ -1,0 +1,64 @@
+﻿@model QL_KhachSan.Models.Phong
+@{
+    ViewBag.Title = "Xác nhận xóa phòng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h4 class="text-danger mb-3">⚠ Xác nhận xóa phòng</h4>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @Html.ValidationSummary(false)
+    </div>
+}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <div class="row mb-2">
+            <div class="col-sm-3 fw-bold">Tên phòng</div>
+            <div class="col-sm-9">@Model.TenPhong</div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-sm-3 fw-bold">Tình trạng</div>
+            <div class="col-sm-9">
+                @if (string.IsNullOrEmpty(Model.TinhTrang))
+                {
+                    <span class="text-muted">Chưa cập nhật</span>
+                }
+                else if (Model.TinhTrang == "Trống")
+                {
+                    <span class="badge bg-success">Trống</span>
+                }
+                else if (Model.TinhTrang == "Đang sử dụng")
+                {
+                    <span class="badge bg-warning text-dark">Đang sử dụng</span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">@Model.TinhTrang</span>
+                }
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-sm-3 fw-bold">Biến thể</div>
+            <div class="col-sm-9">
+                @(Model.BienThePhong != null
+                    ? Model.BienThePhong.BienThe
+                    : "Không có biến thể")
+            </div>
+        </div>
+
+        @using (Html.BeginForm("Delete", "Phong", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.MaPhong)
+
+            <button type="submit" class="btn btn-danger">🗑 Xóa</button>
+            <a href="@Url.Action("Index")" class="btn btn-secondary ms-2">⬅ Hủy</a>
+        }
+    </div>
+</div>

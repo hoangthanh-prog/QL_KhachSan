@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        body {
+            margin: 0;
+            background-color: #f5f6fa;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #2c3e50;
+            color: #fff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+            padding: 20px 0;
+        }
+
+            .sidebar h4 {
+                text-align: center;
+                margin-bottom: 20px;
+                font-weight: 600;
+            }
+
+            .sidebar .nav-link {
+                color: #ecf0f1;
+                padding: 10px 20px;
+                transition: all 0.2s;
+            }
+
+                .sidebar .nav-link:hover {
+                    background: #34495e;
+                    color: #fff;
+                }
+
+                .sidebar .nav-link.active {
+                    background: #1abc9c;
+                    color: #fff;
+                    font-weight: 600;
+                }
+
+        .content {
+            margin-left: 240px;
+            padding: 25px;
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h4>Admin Panel</h4>
+            <nav class="nav flex-column">
+                <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString()=="Dashboard"?"active":"")"
+                   href="@Url.Action("Index","Dashboard")">Dashboard</a>
+
+                <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString()=="Phong"?"active":"")"
+                   href="@Url.Action("Index","Phong")">Quản lý phòng</a>
+
+                <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString()=="BienThePhong"?"active":"")"
+                   href="@Url.Action("Index","BienThePhong")">Quản lý biến thể phòng</a>
+
+                <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString()=="KhachHangs"?"active":"")"
+                   href="@Url.Action("Index","KhachHangs")">Quản lý khách hàng</a>
+                <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString()=="HoaDon" ?"active":"")"
+                   href="@Url.Action("DanhSachHoaDon","HoaDon")">Danh sách hóa đơn</a>                
+                <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString()=="BaoCao" ?"active":"")"
+                   href="@Url.Action("DoanhThu","BaoCao")">Doanh thu</a>
+                <hr class="text-light mx-3">
+
+                <a class="nav-link" href="@Url.Action("Logout","Account")">Đăng xuất</a>
+            </nav>
+        </aside>
+
+        <!-- Content -->
+        <main class="content">
+            @RenderBody()
+        </main>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+
+</html>

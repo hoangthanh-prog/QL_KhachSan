@@ -1,0 +1,58 @@
+﻿@model QL_KhachSan.Models.KhachHang
+@{
+    ViewBag.Title = "ChinhSuaThongTin";
+}
+
+<div class="card mx-auto shadow-lg border-0" style="max-width: 600px; border-radius: 16px; overflow: hidden;">
+    <div class="card-header text-white py-4 text-center"
+         style="background: linear-gradient(135deg, #9C7A5A 0%, #B89F86 100%);">
+        <h3 class="mb-0 fw-bold fs-4">Chỉnh sửa thông tin cá nhân</h3>
+    </div>
+
+    <div class="card-body p-4 p-lg-5 bg-light">
+        <form asp-action="ChinhSuaThongTin" asp-controller="Account" method="post">
+            <div class="row g-4">
+                <div class="col-12">
+                    <label class="form-label fw-semibold" style="color: #8B6F47;">
+                        Họ và tên <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" class="form-control form-control-lg"
+                           name="TenKH" value="@Model.TenKH" required />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold" style="color: #8B6F47;">Giới tính</label>
+                    <select class="form-select form-select-lg" asp-for="GioiTinh" name="GioiTinh">
+                        <option value="Nam" @(Model.GioiTinh == "Nam" ? "selected" : "")>Nam</option>
+                        <option value="Nữ" @(Model.GioiTinh == "Nữ" ? "selected" : "")>Nữ</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold" style="color: #8B6F47;">Ngày sinh</label>
+                    <input type="date" class="form-control form-control-lg"
+                           name="NgaySinh"
+                           value="@(Model.NgaySinh?.ToString("yyyy-MM-dd"))" />
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label fw-semibold" style="color: #8B6F47;">Tỉnh thành</label>
+                    @Html.DropDownList("TinhThanh", (SelectList)ViewBag.Provinces, "-- Chọn tỉnh/thành --", new { @class = "form-control form-control-lg" })
+                </div>
+                <a class="text-primary text-decoration-none fw-bold text-center" href="@Url.Action("DoiMatKhau")">Đổi mật khẩu?</a>
+            </div>            
+            
+            <hr class="my-3 border-secondary-subtle">
+
+            <div class="d-flex justify-content-between">
+                <a href="@Url.Action("Index", "Profile")" class="btn btn-lg btn-outline-secondary px-5">
+                    Hủy bỏ
+                </a>
+                <button type="submit" class="btn btn-lg px-5 py-2 text-white shadow-sm"
+                        style="background-color: #9C7A5A; border: none;">
+                    <i class="fas fa-save me-2"></i>Lưu thay đổi
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

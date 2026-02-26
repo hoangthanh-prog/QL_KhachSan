@@ -1,0 +1,113 @@
+﻿@using System.Linq
+@using QL_KhachSan
+@{
+    ViewBag.Title = "Home Page";
+    var loaiPhongList = ViewBag.LoaiPhongList as List<QL_KhachSan.Models.BienThePhong>;
+    var phongNoiBat = ViewBag.PhongNoiBat as List<QL_KhachSan.Models.BienThePhong>;
+}
+
+<div class="container px-0 hero">
+    <div class="hero-box">
+        <img src="~/Content/Images/bg_banner.jpg" alt="HUIT Hotel" class="hero-img" />
+        <div class="hero-overlay"></div>
+
+        <div class="hero-text">
+            <h2>Giảm giá 50%</h2>
+            <p>Cam kết 50% cho khách hàng đặt phòng Standard trong tháng này.</p>
+        </div>
+
+        @*<div class="booking-card p-4">
+            <h4 class="mb-3">Đặt phòng ngay</h4>
+
+            @using (Html.BeginForm("TimPhong", "Home", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="mb-2">
+                    <label class="form-label">Ngày đến</label>
+                    <input type="date" name="ngayDen" class="form-control" />
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label">Ngày đi</label>
+                    <input type="date" name="ngayDi" class="form-control" />
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label">Hạng phòng</label>
+                    <select class="form-control" name="maBienThe">
+                        <option value="">Chọn hạng phòng</option>
+
+                        @foreach (var b in loaiPhongList)
+                        {
+                            <option value="@b.MaBienThe">
+                                @b.LoaiPhong.TenLoai - @b.BienThe
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label">Người lớn</label>
+                        <input class="form-control" value="2" />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Trẻ em</label>
+                        <input class="form-control" value="0" />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn w-100" style="background:linear-gradient(135deg,#00AEEF,#007ACC);color:#fff;border:none;">
+                    Tìm phòng
+                </button>
+            }
+        </div>*@
+    </div>
+</div>
+
+
+<div class="container mt-5 mb-5">
+    <h3 class="mb-4" style="color:#2B2D42;">Phòng nổi bật</h3>
+
+    <div class="row">
+        @foreach (var item in phongNoiBat)
+        {
+            var tong = item.Phongs.Count();
+            var trong = item.Phongs.Count(p => p.TinhTrang.Trim() == "Trống");
+
+            var fileAnh = item.HinhAnhs.First().HinhAnh1.Trim();
+            var urlBg = Url.Content("~/Content/Images/" + fileAnh);
+
+            <div class="col-md-4 mb-4 d-flex">
+                <div class="card shadow-sm border-0 flex-fill">
+
+                    <div class="card-img-top-fixed" style="background-image:url('@urlBg');"></div>
+
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title mb-1">@item.LoaiPhong.TenLoai</h5>
+                        <span class="badge bg-info text-dark mb-2">@item.BienThe</span>
+
+                        <p class="text-muted small mb-2">@item.MoTa</p>
+
+                        <p class="mb-1">
+                            <span class="fw-bold text-danger">
+                                @String.Format("{0:N0} VNĐ / đêm", item.GiaBan)
+                            </span>
+                        </p>
+
+                        <p class="small text-muted mb-3">Còn trống: <strong>@trong</strong> / @tong phòng</p>
+
+                        <div class="mt-auto">
+                            <a href="@Url.Action("ChiTietBienThe","Phong", new { id = item.MaBienThe })"
+                               class="btn w-100 text-white"
+                               style="background:#004E7C;">
+                                Xem chi tiết & đặt phòng
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

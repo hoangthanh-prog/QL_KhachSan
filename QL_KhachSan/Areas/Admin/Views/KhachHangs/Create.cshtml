@@ -1,0 +1,66 @@
+﻿@model QL_KhachSan.Models.KhachHang
+
+@{
+    ViewBag.Title = "Trang Thêm Khách Hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container">
+    <div class="row justify-content-center mt-5 mb-5">
+        <div class="shadow-lg border-0 rounded-4 overflow-hidden">
+            <div class="p-3">
+                <h2 class="text-center mb-4 fw-bold text-success">Thêm khách hàng</h2>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @ViewBag.Error
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                @using (Html.BeginForm("Create", "KhachHangs", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-floating mb-3">
+                        <input type="text" name="TenKH" class="form-control" id="floatingTenKH" placeholder="Nhập tên khách hàng..." required />
+                        <label for="floatingTenKH">Tên khách hàng</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="email" name="Gmail" class="form-control" id="floatingEmail" placeholder="Nhập email..." required />
+                        <label for="floatingEmail">Gmail</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="password" name="MatKhau" class="form-control" id="floatingPassword" placeholder="Nhập mật khẩu..." required />
+                        <label for="floatingPassword">Mật khẩu</label>
+                    </div>
+
+                    <div class="mb-3">
+                        <select name="Gender" class="form-select" required>
+                            <option value="" disabled selected>Chọn giới tính</option>
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </select>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="date" name="NgaySinh" class="form-control" id="floatingNgaySinh" required />
+                        <label for="floatingNgaySinh">Ngày sinh</label>
+                    </div>
+
+                    @Html.DropDownList("TinhThanh", (SelectList)ViewBag.Provinces, "-- Chọn tỉnh/thành --", new { @class = "form-control mb-3" })
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm"
+                            style="background: linear-gradient(to right, #10fd0d, #0cb90a); border: none;">
+                        Đăng ký
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+

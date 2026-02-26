@@ -1,0 +1,60 @@
+﻿
+@model IEnumerable<QL_KhachSan.Models.ChiTietHD>
+
+<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <!-- modal-lg để table rộng rãi với nhiều cột -->
+    <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden">
+        <div class="modal-header bg-warning text-dark py-3">
+            <h5 class="modal-title fw-bold mb-0" id="datPhongGanDayModalLabel">
+                <i class="fas fa-calendar-check me-2"></i>
+                Các lượt đặt phòng gần đây
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+        </div>
+
+        <div class="modal-body py-4 px-4">
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped table-hover align-middle mb-0">
+                        <thead class="table-warning">
+                            <tr>
+                                <th scope="col">Khách hàng</th>
+                                <th scope="col">Phòng</th>
+                                <th scope="col">Ngày bắt đầu</th>
+                                <th scope="col">Ngày kết thúc</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var b in Model)
+                            {
+                                <tr>
+                                    <td class="fw-medium">@b.HoaDon.KhachHang.TenKH</td>
+                                    <td>@b.Phong.TenPhong</td>
+                                    <td>@(b.NgayBD?.ToString("dd/MM/yyyy"))</td>
+                                    <td>@(b.NgayKT?.ToString("dd/MM/yyyy"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="fas fa-calendar-times fa-3x mb-3 text-warning opacity-50"></i>
+                    <br />
+                    <strong>Chưa có lượt đặt phòng nào gần đây.</strong>
+                    <br />
+                    <small>Các đặt phòng mới sẽ được hiển thị ở đây.</small>
+                </div>
+            }
+        </div>
+
+        <div class="modal-footer border-0 py-2">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+                Đóng
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,139 @@
+﻿@model List<QL_KhachSan.Models.HoaDon>
+@{
+    ViewBag.Title = "ThanhToanThanhCong";
+}
+<style>
+    :root {
+        --blue: #00AEEF;
+        --gold: #D4AF37;
+    }
+
+    .card {
+        max-width: 520px;
+        width: 100%;
+        border: none;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0,174,239,0.3);
+    }
+
+    .header {
+        background: linear-gradient(135deg, var(--blue), #0088cc);
+        color: white;
+        text-align: center;
+        padding: 40px 20px 60px;
+    }
+
+    .check {
+        width: 100px;
+        height: 100px;
+        background: white;
+        color: #10b981;
+        border-radius: 50%;
+        font-size: 3.5rem;
+        margin: -60px auto 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        animation: pulse 2s infinite;
+    }
+
+    .body {
+        padding: 0 40px 50px;
+        text-align: center;
+    }
+
+    .order-id {
+        background: #f0f9ff;
+        border: 2px dashed var(--blue);
+        border-radius: 16px;
+        padding: 18px;
+        margin: 25px 0;
+        font-weight: 700;
+        color: var(--blue);
+        font-size: 1.3rem;
+    }
+
+    .info {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 20px;
+        margin: 25px 0;
+        text-align: left;
+        font-size: 1.05rem;
+    }
+
+        .info div {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+
+            .info div:last-child {
+                font-weight: 700;
+                font-size: 1.4rem;
+                color: #dc2626;
+                border-top: 2px solid #eee;
+                padding-top: 15px;
+                margin-top: 10px;
+            }
+
+    .btn-gold {
+        background: var(--gold);
+        color: #000;
+        padding: 14px 40px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin: 10px;
+    }
+
+    .btn-blue {
+        background: var(--blue);
+        color: white;
+        padding: 14px 40px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin: 10px;
+    }
+</style>
+<div class="d-flex">
+    @foreach (var hd in Model)
+    {
+        <div class="card mx-auto">
+
+            <div class="header">
+                <h2 class="fw-bold">Đặt phòng thành công!</h2>
+                <p class="opacity-90">Cảm ơn quý khách đã tin tưởng</p>
+            </div>
+
+            <div class="check d-flex align-items-center justify-content-center">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <div class="body">
+
+                <div class="order-id">
+                    Mã đặt phòng: <span style="font-size:1.6rem">#@hd.MaHD</span>
+                </div>
+
+                <div class="info">
+                    <div><span>Khách hàng</span><span>@hd.MaKH</span></div>
+                    <div><span>Ngày lập</span><span>@hd.NgayLap</span></div>
+                    <div><span>Số lượng phòng</span><span>@hd.ChiTietHDs.Count Phòng</span></div>
+                    <div class="ms-3 row">
+                        @foreach (var ct in hd.ChiTietHDs)
+                        {
+                            <p class="col-12">@ct.Phong.BienThePhong.BienThe - @ct.Phong.TenPhong</p>
+                        }
+                    </div>
+                    <div><span>Tổng tiền</span><span>@hd.TongTien.Value.ToString("N0") VNĐ</span></div>
+                </div>
+
+                <div>
+                    <a href="@Url.Action("DanhSachBienThe")" class="btn btn-gold">Về trang chủ</a>
+                </div>
+
+            </div>
+        </div>
+    }
+</div>

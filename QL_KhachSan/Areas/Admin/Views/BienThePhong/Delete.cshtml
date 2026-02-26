@@ -1,0 +1,90 @@
+﻿@model QL_KhachSan.Models.BienThePhong
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Xác nhận xóa biến thể phòng";
+}
+
+<div class="container mt-4">
+
+    <div class="card shadow border-0 rounded-3">
+
+        <!-- HEADER -->
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0">
+                ⚠️ Xác nhận xóa biến thể phòng
+            </h4>
+        </div>
+
+        <div class="card-body">
+
+            <!-- THÔNG BÁO LỖI -->
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    @Html.ValidationSummary(false)
+                </div>
+            }
+
+            <p class="text-danger fw-bold">
+                Bạn có chắc chắn muốn xóa biến thể phòng sau không?
+            </p>
+
+            <table class="table table-bordered">
+                <tr>
+                    <th style="width:30%">Tên biến thể</th>
+                    <td>@Model.BienThe</td>
+                </tr>
+
+                <tr>
+                    <th>Loại phòng</th>
+                    <td>
+                        @(Model.LoaiPhong != null
+                            ? Model.LoaiPhong.TenLoai
+                            : "Không xác định")
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Giá bán</th>
+                    <td class="text-danger fw-bold">
+                        @String.Format("{0:N0} VNĐ / đêm", Model.GiaBan ?? 0)
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Mô tả</th>
+                    <td>@Model.MoTa</td>
+                </tr>
+            </table>
+
+            <div class="alert alert-warning mt-3">
+                <strong>Lưu ý:</strong>
+                <ul class="mb-0">
+                    <li>Không thể xóa nếu đang có phòng sử dụng biến thể này</li>
+                    <li>Không thể xóa nếu còn hình ảnh liên quan</li>
+                </ul>
+            </div>
+
+            <!-- BUTTON -->
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-danger px-4">
+                        🗑️ Xóa
+                    </button>
+
+                    @Html.ActionLink(
+                        "↩️ Hủy",
+                        "Index",
+                        null,
+                        new { @class = "btn btn-secondary px-4 ms-2" }
+                    )
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

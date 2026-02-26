@@ -1,0 +1,71 @@
+﻿@model IEnumerable<QL_KhachSan.Models.HoaDon>
+@{ 
+    var tongCong = Model.Sum(hd => hd.TongTien);
+}
+
+<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden">
+        <div class="modal-header bg-primary text-white py-3">
+            <h5 class="modal-title fw-bold mb-0" id="hoaDonThangModalLabel">
+                <i class="fas fa-file-invoice-dollar me-2"></i>
+                Danh sách hóa đơn tháng
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+        </div>
+
+        <div class="modal-body py-4 px-4">
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped table-hover align-middle mb-3">
+                        <thead class="table-primary">
+                            <tr>
+                                <th scope="col">Mã hóa đơn</th>
+                                <th scope="col">Khách hàng</th>
+                                <th scope="col">Ngày lập</th>
+                                <th scope="col" class="text-end">Tổng tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var hd in Model)
+                            {
+                                <tr>
+                                    <td class="fw-medium">@hd.MaHD</td>
+                                    <td>@hd.KhachHang.TenKH</td>
+                                    <td>@hd.NgayLap.Value.ToString("dd/MM/yyyy")</td>
+                                    <td class="text-end fw-bold text-primary">
+                                        @String.Format("{0:N0} đ", hd.TongTien)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Tổng doanh thu tháng -->                
+                <div class="border-top pt-3 text-end">
+                    <h5 class="fw-bold text-primary mb-0">
+                        Tổng doanh thu tháng:
+                        <span class="text-dark fs-4">@String.Format("{0:N0} đ", tongCong)</span>
+                    </h5>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="fas fa-receipt fa-3x mb-3 opacity-50"></i>
+                    <br />
+                    <strong>Chưa có hóa đơn nào trong tháng này.</strong>
+                    <br />
+                    <small>Các hóa đơn sẽ xuất hiện khi có đặt phòng hoàn tất.</small>
+                </div>
+            }
+        </div>
+
+        <div class="modal-footer border-0 py-2">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+                Đóng
+            </button>
+        </div>
+    </div>
+</div>

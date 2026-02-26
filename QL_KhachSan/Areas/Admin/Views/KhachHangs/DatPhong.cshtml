@@ -1,0 +1,122 @@
+﻿@model IEnumerable<QL_KhachSan.Models.BienThePhong>
+
+@{
+    ViewBag.Title = "DatPhong";
+}
+<style>
+    .filter-bar {
+        background: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+        .filter-bar .form-select {
+            height: 42px;
+        }
+
+    .btn-filter {
+        background: #00AEEF;
+        height: 42px;
+        font-weight: 500;
+    }
+
+    .table thead th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+</style>
+<div class="card shadow-sm border-0">
+    <!-- Header -->
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fw-semibold">Danh sách đặt phòng</h5>
+    </div>
+
+    <!-- Filter -->
+    @using (Html.BeginForm("DatPhong", "DatPhongGiupKhach", FormMethod.Get))
+    {
+        <input type="hidden" name="MaKH" value="@ViewBag.MaKH" />
+        <div class="filter-bar p-3">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label small text-muted">Hạng phòng</label>
+                    @Html.DropDownList("LoaiPhong",
+                        ViewBag.HangPhongList as SelectList,
+                        "--- Chọn hạng phòng ---",
+                        new { @class = "form-select" })
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-filter text-white w-100">
+                        Lọc
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Table -->
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Biến thể</th>
+                    <th>Hạng phòng</th>
+                    <th class="text-center">Phòng trống</th>
+                    <th class="text-end">Giá bán</th>
+                    <th class="text-center" style="width: 140px;">Thao tác</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    var modalid = "XacNhan" + item.MaBienThe;
+                    <tr>
+                        <td class="fw-medium">@item.BienThe</td>
+                        <td>@item.LoaiPhong.TenLoai</td>
+                        <td class="text-center">
+                            @item.Phongs.Count(p => p.TinhTrang == "Trống")
+
+                        </td>
+                        <td class="text-end fw-semibold text-danger">
+                            @item.GiaBan.Value.ToString("N0") VNĐ
+                        </td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-primary col-5" data-bs-toggle="modal" data-bs-target="#@modalid">
+                                Chọn
+                            </a>
+                        </td>
+                    </tr>
+                    <div class="modal fade" id="@modalid" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                @using (Html.BeginForm("DatPhong", "KhachHangs", FormMethod.Post))
+                                {
+                                    <div class="modal-header" style="display: block">
+                                        <input type="hidden" name="maBienThe" value="@item.MaBienThe" />
+                                        <input type="hidden" name="MaKH" value="@ViewBag.MaKH" />
+                                        <div class="row">
+                                            <h5 class="modal-title col-10">Đặt phòng</h5>
+                                            <button type="button" class="btn-close col-2 me-2" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Hiển thị thông tin người dùng nhập -->
+                                            <input type="date" class="form-control mb-3" name="ngayDen" required />
+                                            <input type="date" class="form-control mb-3" name="ngayDi" required />
+                                            <input type="number" class="form-control mb-3" name="sld" placeholder="Số lượng phòng"required />
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary mx-auto">Xác nhận</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
