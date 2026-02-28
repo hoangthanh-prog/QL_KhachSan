@@ -24,5 +24,5 @@ password: 123123
 ## Cách chạy
 - chạy file "CSDL_QL-KhachSan.sql" trên SQL Server
 - mở file "QL_KhachSan.sln" bằng Visual Studio
-- cập nhật lại file "Web.config" trong connectionString đổi "LAPTOP-JP8BHSPU\SQLEXPRESS" thành tên server của máy
+- cập nhật lại file "Web.config" tìm connectionString đổi "LAPTOP-JP8BHSPU\SQLEXPRESS" thành tên SQL Server của máy
 - ấn f5 để chạy
