@@ -4,7 +4,7 @@
 Web quản lý khách sạn:
 - User: đăng ký, đăng nhập, xem/lọc phòng, đặt phòng, giỏ hàng và thanh toán.
 - Admin: quản lý phòng, biến thể phòng, khách hàng, hóa đơn, doanh thu.
-- Mô phỏng lại quá trình quản lý 1 khách sạn gôm có thao tác của khách và admin. Khách có thể thêm phòng và thanh toán
+- Mô phỏng lại quá trình quản lý 1 khách sạn gôm có thao tác của khách và admin.
 
 ## Công nghệ
 - ASP.NET MVC (.NET Framework / .NET Core)
